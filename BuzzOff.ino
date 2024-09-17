@@ -45,7 +45,7 @@ void loop(void){
       digitalWrite(buttonLedG, HIGH);
       digitalWrite(buttonLedB, HIGH);
       lcd.setCursor(0,0);
-      lcd.print("Try Again");
+      lcd.print("   Try Again!   ");
       winOrLose();
       loseMusic();
       delay(3000);
@@ -56,7 +56,7 @@ void loop(void){
       digitalWrite(buttonLedG, LOW);
       digitalWrite(buttonLedB, HIGH);
       lcd.setCursor(0,0);
-      lcd.print("Well Done");
+      lcd.print("   Good Work!   ");
       winOrLose();
       winMusic();
       delay(3000);
@@ -64,22 +64,70 @@ void loop(void){
   }else{
     lcd.setCursor(0,0);
     if (timerRunning == 0){
-    digitalWrite(buttonLedR, HIGH);
-    digitalWrite(buttonLedG, HIGH);
-    digitalWrite(buttonLedB, LOW);
-      lcd.print("Ready           ");
+      digitalWrite(buttonLedR, HIGH);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, LOW);
+      lcd.print("  Next Player!  ");
     }else{
-    digitalWrite(buttonLedR, HIGH);
-    digitalWrite(buttonLedG, LOW);
-    digitalWrite(buttonLedB, LOW);
-      lcd.print("Go           ");
+      digitalWrite(buttonLedR, HIGH);
+      digitalWrite(buttonLedG, LOW);
+      digitalWrite(buttonLedB, LOW);
+      lcd.print("   GO GO GO!!   ");
       duration = millis() - startTime;
-      lcd.setCursor(0,1);
-      lcd.print(duration);lcd.print ("     ");
+      printDuration();
     }
 
 
     if (timerRunning == 0 && digitalRead(button) == LOW){
+      lcd.setCursor(0,0);
+      lcd.print("   Get Ready!   ");
+      lcd.setCursor(0,1);
+      lcd.print("                ");
+      digitalWrite(buttonLedR, LOW);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, LOW);
+      delay(1000);
+
+      digitalWrite(buttonLedR, HIGH);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, HIGH);
+      delay(500);
+      digitalWrite(buttonLedR, LOW);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, LOW);
+      lcd.setCursor(0,1);
+      lcd.print("  3             ");
+      delay(500);
+
+      digitalWrite(buttonLedR, HIGH);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, HIGH);
+      delay(500);
+      digitalWrite(buttonLedR, LOW);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, LOW);
+      lcd.setCursor(0,1);
+      lcd.print("  3    2        ");
+      delay(500);
+
+      digitalWrite(buttonLedR, HIGH);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, HIGH);
+      delay(500);
+      digitalWrite(buttonLedR, LOW);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, LOW);
+      lcd.setCursor(0,1);
+      lcd.print("  3    2    1   ");
+      delay(500);
+
+      digitalWrite(buttonLedR, HIGH);
+      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedB, HIGH);
+      delay(500);
+      
+      
+      //delay here and flash LED - Count Down Screen!
       startTime = millis();
       timerRunning = 1;
     }
@@ -89,13 +137,38 @@ void loop(void){
   }
 }
 
+void printDuration(){
+      lcd.setCursor(0,1);
+      unsigned long milisecs = duration; //unsigned long
+      unsigned long seconds = duration / 1000; //unsigned long
+      unsigned long minutes = seconds / 60;         //unsigned long
+      unsigned long hours = minutes / 60;           //unsigned long
+      unsigned long days = hours / 24;              //unsigned long
+      milisecs %= 1000;
+      seconds %= 60;
+      minutes %= 60;
+      hours %= 24;
+      if(hours > 0){
+        lcd.print(hours);
+        lcd.print("h ");
+      }
+      if(minutes > 0){
+        lcd.print(minutes);
+        lcd.print("m ");
+      }
+      lcd.print(seconds);
+      lcd.print("s ");
+      lcd.print(milisecs);
+      lcd.print("ms ");
+      lcd.print("                ");
+}
+
 void winOrLose(){
   if(timerRunning == 1){
     endTime = millis();
     timerRunning = 0;
     duration = endTime - startTime;
-    lcd.setCursor(0,1);
-    lcd.print(duration);lcd.print ("     ");
+    printDuration();
   }
 }
 

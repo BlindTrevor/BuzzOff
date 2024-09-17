@@ -10,6 +10,8 @@ const int buttonLedG = 6;
 const int buttonLedB = 7;
 const int speakerPin = 8;
 const int buttonLedC = 9;
+const int resultLedA = 10;
+const int resultLedC = 11;
 int start, end_, buttonPress;
 unsigned long startTime, endTime, duration;
 byte timerRunning;
@@ -23,10 +25,14 @@ void setup(void){
   pinMode(buttonLedG, OUTPUT);
   pinMode(buttonLedB, OUTPUT);
   pinMode(buttonLedC, OUTPUT);
+  pinMode(resultLedA, OUTPUT);
+  pinMode(resultLedC, OUTPUT);
   digitalWrite(buttonLedC, HIGH);
   digitalWrite(buttonLedR, HIGH);
   digitalWrite(buttonLedG, HIGH);
   digitalWrite(buttonLedB, HIGH);
+  digitalWrite(resultLedA, HIGH);
+  digitalWrite(resultLedC, HIGH);
   pinMode(startPin, INPUT_PULLUP);
   pinMode(startPin, INPUT_PULLUP);
   pinMode(button, INPUT_PULLUP);
@@ -44,6 +50,8 @@ void loop(void){
       digitalWrite(buttonLedR, LOW);
       digitalWrite(buttonLedG, HIGH);
       digitalWrite(buttonLedB, HIGH);
+      digitalWrite(resultLedA, HIGH);
+      digitalWrite(resultLedC, LOW);
       lcd.setCursor(0,0);
       lcd.print("   Try Again!   ");
       winOrLose();
@@ -55,6 +63,8 @@ void loop(void){
       digitalWrite(buttonLedR, HIGH);
       digitalWrite(buttonLedG, LOW);
       digitalWrite(buttonLedB, HIGH);
+      digitalWrite(resultLedA, LOW);
+      digitalWrite(resultLedC, HIGH);
       lcd.setCursor(0,0);
       lcd.print("   Good Work!   ");
       winOrLose();
@@ -74,11 +84,16 @@ void loop(void){
       digitalWrite(buttonLedB, LOW);
       lcd.print("   GO GO GO!!   ");
       duration = millis() - startTime;
-      printDuration();
+      
+
+      lcd.print(printDuration());
+      
     }
 
 
     if (timerRunning == 0 && digitalRead(button) == LOW){
+      digitalWrite(resultLedA, HIGH);
+      digitalWrite(resultLedC, HIGH);
       lcd.setCursor(0,0);
       lcd.print("   Get Ready!   ");
       lcd.setCursor(0,1);
@@ -97,6 +112,7 @@ void loop(void){
       digitalWrite(buttonLedB, LOW);
       lcd.setCursor(0,1);
       lcd.print("  3             ");
+      tone(speakerPin, NOTE_C4, 250);
       delay(500);
 
       digitalWrite(buttonLedR, HIGH);
@@ -108,6 +124,7 @@ void loop(void){
       digitalWrite(buttonLedB, LOW);
       lcd.setCursor(0,1);
       lcd.print("  3    2        ");
+      tone(speakerPin, NOTE_C4, 250);
       delay(500);
 
       digitalWrite(buttonLedR, HIGH);
@@ -119,15 +136,14 @@ void loop(void){
       digitalWrite(buttonLedB, LOW);
       lcd.setCursor(0,1);
       lcd.print("  3    2    1   ");
-      delay(500);
+      tone(speakerPin, NOTE_C4, 250);
+      delay(1000);
 
       digitalWrite(buttonLedR, HIGH);
       digitalWrite(buttonLedG, HIGH);
       digitalWrite(buttonLedB, HIGH);
-      delay(500);
+      tone(speakerPin, NOTE_C5, 500);
       
-      
-      //delay here and flash LED - Count Down Screen!
       startTime = millis();
       timerRunning = 1;
     }
@@ -137,7 +153,7 @@ void loop(void){
   }
 }
 
-void printDuration(){
+String printDuration(){
       lcd.setCursor(0,1);
       unsigned long milisecs = duration; //unsigned long
       unsigned long seconds = duration / 1000; //unsigned long
@@ -148,19 +164,22 @@ void printDuration(){
       seconds %= 60;
       minutes %= 60;
       hours %= 24;
+      String retStr = "";
       if(hours > 0){
-        lcd.print(hours);
-        lcd.print("h ");
+        retStr.concat(hours);
+        retStr.concat("h ");
+      }else{
+        retStr.concat("   ");
       }
       if(minutes > 0){
-        lcd.print(minutes);
-        lcd.print("m ");
+        retStr.concat(minutes);
+        retStr.concat("m ");
       }
-      lcd.print(seconds);
-      lcd.print("s ");
-      lcd.print(milisecs);
-      lcd.print("ms ");
-      lcd.print("                ");
+      retStr.concat(seconds);
+      retStr.concat("s ");
+      retStr.concat(milisecs);
+      retStr.concat("ms     ");
+      return(retStr);
 }
 
 void winOrLose(){
@@ -168,7 +187,7 @@ void winOrLose(){
     endTime = millis();
     timerRunning = 0;
     duration = endTime - startTime;
-    printDuration();
+    lcd.print(printDuration());
   }
 }
 
@@ -188,14 +207,14 @@ void winMusic(){
     // to calculate the note duration, take one second divided by the note type.
     //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
     int noteDuration = 1000 / noteDurations[thisNote];
-    tone(8, melody[thisNote], noteDuration);
+    tone(speakerPin, melody[thisNote], noteDuration);
 
     // to distinguish the notes, set a minimum time between them.
     // the note's duration + 30% seems to work well:
     int pauseBetweenNotes = noteDuration * 1.30;
     delay(pauseBetweenNotes);
     // stop the tone playing:
-    noTone(8);
+    noTone(speakerPin);
   }
 }
 

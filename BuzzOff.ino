@@ -34,7 +34,7 @@ void setup(void){
   digitalWrite(resultLedA, HIGH);
   digitalWrite(resultLedC, HIGH);
   pinMode(startPin, INPUT_PULLUP);
-  pinMode(startPin, INPUT_PULLUP);
+  pinMode(endPin, INPUT_PULLUP);
   pinMode(button, INPUT_PULLUP);
 }
 
@@ -56,7 +56,7 @@ void loop(void){
       lcd.print("   Try Again!   ");
       winOrLose();
       loseMusic();
-      delay(3000);
+      delay(1000);
     }
   }else if (start == HIGH && end_== LOW){
     if (timerRunning == 1){
@@ -69,7 +69,7 @@ void loop(void){
       lcd.print("   Good Work!   ");
       winOrLose();
       winMusic();
-      delay(3000);
+      delay(1000);
     }
   }else{
     lcd.setCursor(0,0);
@@ -99,14 +99,10 @@ void loop(void){
       lcd.setCursor(0,1);
       lcd.print("                ");
       digitalWrite(buttonLedR, LOW);
-      digitalWrite(buttonLedG, HIGH);
+      digitalWrite(buttonLedG, LOW);
       digitalWrite(buttonLedB, LOW);
       delay(1000);
 
-      digitalWrite(buttonLedR, HIGH);
-      digitalWrite(buttonLedG, HIGH);
-      digitalWrite(buttonLedB, HIGH);
-      delay(500);
       digitalWrite(buttonLedR, LOW);
       digitalWrite(buttonLedG, HIGH);
       digitalWrite(buttonLedB, LOW);

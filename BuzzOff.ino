@@ -2,8 +2,8 @@
 #include "pitches.h"
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-const int startPin = 2;
-const int endPin = 3;
+const int wireLoopPin = 2;
+const int winPin = 3;
 const int button = 4;
 const int buttonLedR = 5;
 const int buttonLedG = 6;
@@ -12,7 +12,7 @@ const int speakerPin = 8;
 const int buttonLedC = 9;
 const int resultLedA = 10;
 const int resultLedC = 11;
-int start, end_, buttonPress;
+int wireLoop, win, buttonPress;
 unsigned long startTime, endTime, duration;
 byte timerRunning;
 
@@ -33,44 +33,37 @@ void setup(void){
   digitalWrite(buttonLedB, HIGH);
   digitalWrite(resultLedA, HIGH);
   digitalWrite(resultLedC, HIGH);
-  pinMode(startPin, INPUT_PULLUP);
-  pinMode(endPin, INPUT_PULLUP);
+  pinMode(wireLoopPin, INPUT_PULLUP);
+  pinMode(winPin, INPUT_PULLUP);
   pinMode(button, INPUT_PULLUP);
 }
 
 void loop(void){  
-  start = digitalRead(startPin);
-  end_ = digitalRead(endPin);
-  unsigned long currentCount = 0;
-  Serial.print(start);
-  Serial.print("\n");
-  Serial.print(end_);  
-  if (start == LOW && end_== LOW ){
-    if (timerRunning == 1){
-      digitalWrite(buttonLedR, LOW);
-      digitalWrite(buttonLedG, HIGH);
-      digitalWrite(buttonLedB, HIGH);
-      digitalWrite(resultLedA, HIGH);
-      digitalWrite(resultLedC, LOW);
-      lcd.setCursor(0,0);
-      lcd.print("   Try Again!   ");
-      winOrLose();
-      loseMusic();
-      delay(1000);
-    }
-  }else if (start == HIGH && end_== LOW){
-    if (timerRunning == 1){
-      digitalWrite(buttonLedR, HIGH);
-      digitalWrite(buttonLedG, LOW);
-      digitalWrite(buttonLedB, HIGH);
-      digitalWrite(resultLedA, LOW);
-      digitalWrite(resultLedC, HIGH);
-      lcd.setCursor(0,0);
-      lcd.print("   Good Work!   ");
-      winOrLose();
-      winMusic();
-      delay(1000);
-    }
+  wireLoop = digitalRead(wireLoopPin);
+  win = digitalRead(winPin);
+
+  if(wireLoop == LOW && timerRunning == 1 ){
+    digitalWrite(buttonLedR, LOW);
+    digitalWrite(buttonLedG, HIGH);
+    digitalWrite(buttonLedB, HIGH);
+    digitalWrite(resultLedA, HIGH);
+    digitalWrite(resultLedC, LOW);
+    lcd.setCursor(0,0);
+    lcd.print("   Try Again!   ");
+    winOrLose();
+    loseMusic();
+    delay(1000);
+  }else if(win == LOW && timerRunning == 1 ){
+    digitalWrite(buttonLedR, HIGH);
+    digitalWrite(buttonLedG, LOW);
+    digitalWrite(buttonLedB, HIGH);
+    digitalWrite(resultLedA, LOW);
+    digitalWrite(resultLedC, HIGH);
+    lcd.setCursor(0,0);
+    lcd.print("   Good Work!   ");
+    winOrLose();
+    winMusic();
+    delay(1000);
   }else{
     lcd.setCursor(0,0);
     if (timerRunning == 0){
@@ -84,13 +77,8 @@ void loop(void){
       digitalWrite(buttonLedB, LOW);
       lcd.print("   GO GO GO!!   ");
       duration = millis() - startTime;
-      
-
       lcd.print(printDuration());
-      
     }
-
-
     if (timerRunning == 0 && digitalRead(button) == LOW){
       digitalWrite(resultLedA, HIGH);
       digitalWrite(resultLedC, HIGH);
@@ -143,9 +131,6 @@ void loop(void){
       startTime = millis();
       timerRunning = 1;
     }
-
-    
-
   }
 }
 

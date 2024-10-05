@@ -42,7 +42,7 @@ void loop(void){
   wireLoop = digitalRead(wireLoopPin);
   win = digitalRead(winPin);
 
-  if(wireLoop == LOW && timerRunning == 1 ){
+  if(wireLoop == LOW && timerRunning == 1 ){ //Lose
     digitalWrite(buttonLedR, LOW);
     digitalWrite(buttonLedG, HIGH);
     digitalWrite(buttonLedB, HIGH);
@@ -52,8 +52,7 @@ void loop(void){
     lcd.print("   Try Again!   ");
     winOrLose();
     loseMusic();
-    delay(1000);
-  }else if(win == LOW && timerRunning == 1 ){
+  }else if(win == LOW && timerRunning == 1 ){ //Win
     digitalWrite(buttonLedR, HIGH);
     digitalWrite(buttonLedG, LOW);
     digitalWrite(buttonLedB, HIGH);
@@ -63,7 +62,6 @@ void loop(void){
     lcd.print("   Good Work!   ");
     winOrLose();
     winMusic();
-    delay(1000);
   }else{
     lcd.setCursor(0,0);
     if (timerRunning == 0){

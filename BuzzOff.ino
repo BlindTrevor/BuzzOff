@@ -73,17 +73,14 @@ void loop(void){
       digitalWrite(buttonLedR, HIGH);
       digitalWrite(buttonLedG, LOW);
       digitalWrite(buttonLedB, LOW);
-      //This Needs To update less often
-
-
       if (millis() - LcdUpdateMillis >= 125){
         LcdUpdateMillis = millis();
         lcd.setCursor(0,0);
         lcd.print("   GO GO GO!!   ");
         duration = millis() - startTime;
+        lcd.setCursor(0,1);
         lcd.print(printDuration());
       }
-
     }
     if (timerRunning == 0 && digitalRead(button) == LOW){ //Start Sequence
       digitalWrite(resultLedA, HIGH);
@@ -141,7 +138,6 @@ void loop(void){
 }
 
 String printDuration(){
-      lcd.setCursor(0,1);
       unsigned long milisecs = duration; //unsigned long
       unsigned long seconds = duration / 1000; //unsigned long
       unsigned long minutes = seconds / 60;         //unsigned long
@@ -174,6 +170,7 @@ void winOrLose(){
     endTime = millis();
     timerRunning = 0;
     duration = endTime - startTime;
+    lcd.setCursor(0,1);
     lcd.print(printDuration());
   }
 }

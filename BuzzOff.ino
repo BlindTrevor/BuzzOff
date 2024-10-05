@@ -13,7 +13,7 @@ const int buttonLedC = 9;
 const int resultLedA = 10;
 const int resultLedC = 11;
 int wireLoop, win, buttonPress;
-unsigned long startTime, endTime, duration;
+unsigned long startTime, endTime, duration, LcdUpdateMillis;
 byte timerRunning;
 
 void setup(void){
@@ -63,21 +63,29 @@ void loop(void){
     winOrLose();
     winMusic();
   }else{
-    lcd.setCursor(0,0);
-    if (timerRunning == 0){
+    if (timerRunning == 0){ //Waiting to start
       digitalWrite(buttonLedR, HIGH);
       digitalWrite(buttonLedG, HIGH);
       digitalWrite(buttonLedB, LOW);
+      lcd.setCursor(0,0);
       lcd.print("  Next Player!  ");
-    }else{
+    }else{ //Game in progress
       digitalWrite(buttonLedR, HIGH);
       digitalWrite(buttonLedG, LOW);
       digitalWrite(buttonLedB, LOW);
-      lcd.print("   GO GO GO!!   ");
-      duration = millis() - startTime;
-      lcd.print(printDuration());
+      //This Needs To update less often
+
+
+      if (millis() - LcdUpdateMillis >= 125){
+        LcdUpdateMillis = millis();
+        lcd.setCursor(0,0);
+        lcd.print("   GO GO GO!!   ");
+        duration = millis() - startTime;
+        lcd.print(printDuration());
+      }
+
     }
-    if (timerRunning == 0 && digitalRead(button) == LOW){
+    if (timerRunning == 0 && digitalRead(button) == LOW){ //Start Sequence
       digitalWrite(resultLedA, HIGH);
       digitalWrite(resultLedC, HIGH);
       lcd.setCursor(0,0);

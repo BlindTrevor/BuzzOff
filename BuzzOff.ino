@@ -42,6 +42,12 @@ void loop(void){
   wireLoop = digitalRead(wireLoopPin);
   win = digitalRead(winPin);
 
+  Serial.print("Loop:");
+  Serial.print(wireLoop);
+  Serial.print(",");
+  Serial.print("Win:");
+  Serial.println(win);
+
   if(wireLoop == LOW && timerRunning == 1 ){ //Lose
     digitalWrite(buttonLedR, LOW);
     digitalWrite(buttonLedG, HIGH);
